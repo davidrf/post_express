@@ -2,10 +2,9 @@
 
 <form action="/" method="post">
   <select name="fruit" id="fruit">
-    <option value="apple">apple</option>
-    <option value="orange">orange</option>
-    <option value="banana">banana</option>
-    <option value="peach">peach</option>
+    {% for fruit in fruits %}
+    <option value="{{ fruit }}">{{ fruit }}</option>
+    {% endfor %}
   </select>
 
   <input type="submit" value="Submit" />

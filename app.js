@@ -1,10 +1,12 @@
 var express = require('express'),
     engines = require('consolidate'),
+    bodyParser = require('body-parser'),
     app = express();
 
 app.engine('html', engines.nunjucks);
 app.set('view engine', 'html');
-app.set('views', __dirname + 'views');
+app.set('views', __dirname + '/views');
+app.use(bodyParser.urlencoded({ extended: true }));
 
 function errorHandler(err, req, res, next) {
   console.error(err.message);
@@ -14,12 +16,16 @@ function errorHandler(err, req, res, next) {
 }
 
 app.get('/', function(req, res, next) {
-  res.render('fruitPicker');
+  res.render('fruitPicker', { fruits: ['apple', 'banana', 'orange', 'peach'] });
 });
 
 app.post('/', function(req, res, next) {
-  var fruit = req.params.fruit;
-  res.send('Your favorite fruit is %s', fruit);
+  var fruit = req.body.fruit;
+  if (typeof fruit === 'undefined') {
+    next(Error('Please choose a fruit!'));
+  } else {
+    res.status(200).send('Your favorite fruit is ' + fruit);
+  }
 });
 
 app.use(errorHandler);
